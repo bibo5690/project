@@ -1,4 +1,3 @@
-// yarab yezhar
 #include "tm4c123gh6pm.h"
 #include "stdint.h"
 #include "string.h"
