@@ -3,7 +3,12 @@
 #include "string.h"
 #include "stdlib.h"
 #include "math.h"
+#include "fpu.h"
 
+#define NVIC_CPAC               0xE000ED88  // Coprocessor Access Control
+#define HWREG(x)                (*((volatile uint32_t *)(x)))
+
+void FPUEnable(void);
 void UART0_Init(void);
 void PortF_Init(void);
 uint8_t UART0_available(void);
@@ -17,11 +22,13 @@ char* substring(char *destination, const char *source, int beg, int n);
 
 char latitude[100], longitude[100], command[100];
 char lat_dir, long_dir;
-int lat_deg, long_deg, lat_coordinate, long_coordinate;
+int lat_deg, long_deg;
+float lat_coordinate, long_coordinate;
 int flag, len;
 
 int main()
 {
+    FPUEnable();
     UART0_Init();
     PortF_Init();
 
@@ -145,15 +152,15 @@ void getCoordinates(void)
     long_deg = atoi(str);
 
     //coordinates
-    substring(str, latitude, 2, 2);
+    substring(str, latitude, 2, 6);
     UART0_write('\n');
     printStr(str);
-    lat_coordinate = atoi(str);
+    lat_coordinate = atof(str);
 
-    substring(str, longitude, 3, 2);
+    substring(str, longitude, 3, 6);
     UART0_write('\n');
     printStr(str);
-    long_coordinate = atoi(str);
+    long_coordinate = atof(str);
 
     //direction
     lat_dir = latitude[l1-1];
@@ -189,6 +196,16 @@ char* substring(char *destination, const char *source, int beg, int n)
     }
     *destination = '\0';
     return destination;
+}
+
+void FPUEnable(void)
+{
+    //
+    // Enable the coprocessors used by the floating-point unit.
+    //
+    HWREG(NVIC_CPAC) = ((HWREG(NVIC_CPAC) &
+                         ~(NVIC_CPAC_CP10_M | NVIC_CPAC_CP11_M)) |
+                        NVIC_CPAC_CP10_FULL | NVIC_CPAC_CP11_FULL);
 }
 
 

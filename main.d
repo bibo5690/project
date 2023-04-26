@@ -4,3 +4,4 @@
 .\main.o: E:\Programs\Keil\ARM\ARMCC\bin\..\include\string.h
 .\main.o: E:\Programs\Keil\ARM\ARMCC\bin\..\include\stdlib.h
 .\main.o: E:\Programs\Keil\ARM\ARMCC\bin\..\include\math.h
+.\main.o: fpu.h
