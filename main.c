@@ -218,12 +218,18 @@ void FPUEnable(void)
 //uart check
 
 float delta(int priv_latcor, float priv_latdeg, int priv_longcor, float priv_longdeg,int cur_latcor, float cur_latdeg, int cur_longcor, float cur_longdeg) {
-    float p_lat, p_long, c_lat, c_long,d_lat,d_long,D;
+    float p_lat, p_long, c_lat, c_long,D;
     float PI = 3.141592653589793;
-		p_lat = (priv_latcor + priv_latdeg / 60) * (PI / 180);
+	p_lat = (priv_latcor + priv_latdeg / 60) * (PI / 180);
     p_long = (priv_longcor + priv_longdeg / 60) * (PI / 180);
     c_lat = (cur_latcor + cur_latdeg / 60) * (PI / 180);
     c_long = (cur_longcor + cur_longdeg / 60) * (PI / 180);
     D = 1852 * 3440.1 * acos((sin(p_lat) * sin(c_lat)) + cos(p_lat) * cos(c_lat) * cos(c_long - p_long));
+    
+    // different method
+    /*float a = pow(sin((c_lat - p_lat) / 2), 2) + pow(sin((c_long - p_long) / 2), 2) * cos(c_lat) * cos(p_lat);
+    float c = 2 * asin(sqrt(a));
+    D= 6371 * c;    
+    */
     return D;
 }
