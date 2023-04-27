@@ -22,8 +22,8 @@ char* substring(char *destination, const char *source, int beg, int n);
 
 char latitude[100], longitude[100], command[100];
 char lat_dir, long_dir;
-int lat_deg, long_deg;
-float lat_coordinate, long_coordinate;
+float lat_deg, long_deg;
+int lat_coordinate, long_coordinate;
 int flag, len;
 
 int main()
@@ -145,22 +145,22 @@ void getCoordinates(void)
     if (flag == 1)
         return;
 
-    //degrees
-    substring(str, latitude, 0, 2);
-    lat_deg = atoi(str);
-    substring(str, longitude, 0, 3);
-    long_deg = atoi(str);
-
     //coordinates
+    substring(str, latitude, 0, 2);
+    lat_coordinate = atoi(str);
+    substring(str, longitude, 0, 3);
+    long_coordinate = atoi(str);
+
+    //degrees
     substring(str, latitude, 2, 6);
     UART0_write('\n');
     printStr(str);
-    lat_coordinate = atof(str);
+    lat_deg = atof(str);
 
     substring(str, longitude, 3, 6);
     UART0_write('\n');
     printStr(str);
-    long_coordinate = atof(str);
+    long_deg = atof(str);
 
     //direction
     lat_dir = latitude[l1-1];
