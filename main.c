@@ -8,6 +8,7 @@
 #define NVIC_CPAC               0xE000ED88  // Coprocessor Access Control
 #define HWREG(x)                (*((volatile uint32_t *)(x)))
 
+
 void FPUEnable(void);
 void UART0_Init(void);
 void PortF_Init(void);
@@ -19,6 +20,7 @@ void parse(void);
 void getCoordinates(void);
 void getCommand(char*str);
 char* substring(char *destination, const char *source, int beg, int n);
+float delta(int priv_latcor, float priv_latdeg, int priv_longcor, float priv_longdeg, int cur_latcor, float cur_latdeg, int cur_longcor, float cur_longdeg);
 
 char latitude[100], longitude[100], command[100];
 char lat_dir, long_dir;
@@ -215,4 +217,13 @@ void FPUEnable(void)
 //floating point
 //uart check
 
-//MOHAMMED YASSER WAS HERE
+float delta(int priv_latcor, float priv_latdeg, int priv_longcor, float priv_longdeg,int cur_latcor, float cur_latdeg, int cur_longcor, float cur_longdeg) {
+    float p_lat, p_long, c_lat, c_long,d_lat,d_long,D;
+    float PI = 3.141592653589793;
+		p_lat = (priv_latcor + priv_latdeg / 60) * (PI / 180);
+    p_long = (priv_longcor + priv_longdeg / 60) * (PI / 180);
+    c_lat = (cur_latcor + cur_latdeg / 60) * (PI / 180);
+    c_long = (cur_longcor + cur_longdeg / 60) * (PI / 180);
+    D = 1852 * 3440.1 * acos((sin(p_lat) * sin(c_lat)) + cos(p_lat) * cos(c_lat) * cos(c_long - p_long));
+    return D;
+}

@@ -1,2 +1,5 @@
 
 pr.build_log.htm
+*.json
+*.sqlite
+.vs/project/v17/Browse.VC.db
