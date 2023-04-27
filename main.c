@@ -109,7 +109,7 @@ void parse(void)
     //CHECK
     for (i = 0; i < 6; i++)
         check[i] = command[i];
-    if (((strcmp(check, "$GPRMC")) != 0) || len < 10 || command[16] != 'A')
+    if (((strcmp(check, "$GPRMC")) != 0) || len < 10 || command[14] != 'A')
     {
         flag = 1;
         return;
@@ -117,7 +117,7 @@ void parse(void)
 
     j = 0;
     printStr("\nlatitude: ");
-    for (i = 19; i <= 29; i++)
+    for (i = 16; i <= 25; i++)
     {
         UART0_write(command[i]);
         latitude[j] = command[i];
@@ -125,7 +125,7 @@ void parse(void)
     }
     printStr("\nlongitude: ");
     j = 0;
-    for (i = 32; i <= 43; i++)
+    for (i = 27; i <= 37; i++)
     {
         UART0_write(command[i]);
         longitude[j] = command[i];
