@@ -220,7 +220,7 @@ void FPUEnable(void)
 float delta(int priv_latcor, float priv_latdeg, int priv_longcor, float priv_longdeg,int cur_latcor, float cur_latdeg, int cur_longcor, float cur_longdeg) {
     float p_lat, p_long, c_lat, c_long,D;
     float PI = 3.141592653589793;
-	p_lat = (priv_latcor + priv_latdeg / 60) * (PI / 180);
+	  p_lat = (priv_latcor + priv_latdeg / 60) * (PI / 180);
     p_long = (priv_longcor + priv_longdeg / 60) * (PI / 180);
     c_lat = (cur_latcor + cur_latdeg / 60) * (PI / 180);
     c_long = (cur_longcor + cur_longdeg / 60) * (PI / 180);
