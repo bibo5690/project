@@ -20,26 +20,42 @@ void parse(void);
 void getCoordinates(void);
 void getCommand(char*str);
 char* substring(char *destination, const char *source, int beg, int n);
-float delta(int priv_latcor, float priv_latdeg, int priv_longcor, float priv_longdeg, int cur_latcor, float cur_latdeg, int cur_longcor, float cur_longdeg);
+float delta(float p_lat, float p_long, float c_lat, float c_long);
 float torad(int cor, float deg);
 
 char latitude[100], longitude[100], command[100];
 char lat_dir, long_dir;
-float lat_deg, long_deg, c_lat, c_long , p_lat, p_long, f_lat, f_long, s_lat, s_long;
+float lat_deg, long_deg, c_lat, c_long, p_lat, p_long, f_lat, f_long, s_lat, s_long, total_distance;
 int lat_coordinate, long_coordinate;
-int flag, len;
+int flag, len, first;
 
 int main()
 {
     FPUEnable();
     UART0_Init();
     PortF_Init();
-
+    first = 0;
+    total_distance = 0;
     while(1)
     {
         printStr("Enter command: \n");
         getCommand(command);
-        getCoordinates();
+        if (first == 0) {
+            getCoordinates();
+            s_lat = torad(lat_coordinate, lat_deg);
+            s_long = torad(long_coordinate, long_deg);
+            c_lat = s_lat;
+            c_long = s_long;
+            first = 1;
+        }
+        else {
+            p_lat = c_lat;
+            p_long = c_long;
+            getCoordinates();
+            c_lat = torad(lat_coordinate, lat_deg);
+            c_long = torad(long_coordinate, long_deg);
+            total_distance += delta(p_lat, p_long, c_lat, c_long);
+        }
         UART0_write('\n');
     }
 }
@@ -222,14 +238,10 @@ float torad(int cor, float deg) {
     float PI = 3.141592653589793;
     return ((cor + deg / 60) * (PI / 180));
 }
-float delta(int priv_latcor, float priv_latdeg, int priv_longcor, float priv_longdeg,int cur_latcor, float cur_latdeg, int cur_longcor, float cur_longdeg) {
+float delta(float p_lat,float p_long ,float c_lat,float c_long) {
     /* lsa h5leeha bta5od lat w long l 2 points *4 variables bs* 
     bs dh hy7tag en ay point tege yt3melaha torad f main f msh h8yr 2ela lma a3adel main */
-    float p_lat, p_long, c_lat, c_long,D;
-	p_lat = torad(priv_latcor,priv_latdeg);
-    p_long = torad(priv_longcor, priv_longdeg);
-    c_lat = torad(cur_latcor, cur_latdeg);
-    c_long = torad(cur_longcor, cur_longdeg);
+    float D;
     D = 1852 * 3440.1 * acos((sin(p_lat) * sin(c_lat)) + cos(p_lat) * cos(c_lat) * cos(c_long - p_long));
     
     // different method
