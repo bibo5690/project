@@ -22,6 +22,7 @@ void getCommand(char*str);
 char* substring(char *destination, const char *source, int beg, int n);
 float delta(float p_lat, float p_long, float c_lat, float c_long);
 float torad(int cor, float deg);
+void printflo(float x);
 
 char latitude[100], longitude[100], command[100];
 char lat_dir, long_dir;
@@ -56,6 +57,21 @@ int main()
             c_long = torad(long_coordinate, long_deg);
             total_distance += delta(p_lat, p_long, c_lat, c_long);
         }
+        printStr("D = ");
+        printflo(total_distance);
+        UART0_write('\n');
+        printStr("p_lat = ");
+        printflo(p_lat);
+        UART0_write('\n');
+        printStr("p_long = ");
+        printflo(p_long);
+        UART0_write('\n');
+        printStr("c_lat = ");
+        printflo(c_lat);
+        UART0_write('\n');
+        printStr("c_long = ");
+        printflo(c_long);
+        UART0_write('\n');
         UART0_write('\n');
     }
 }
@@ -135,14 +151,14 @@ void parse(void)
     }
 
     j = 0;
-    printStr("\nlatitude: ");
+    //printStr("\nlatitude: ");
     for (i = 16; i <= 25; i++)
     {
         UART0_write(command[i]);
         latitude[j] = command[i];
         j += 1;
     }
-    printStr("\nlongitude: ");
+    //printStr("\nlongitude: ");
     j = 0;
     for (i = 27; i <= 37; i++)
     {
@@ -173,12 +189,12 @@ void getCoordinates(void)
     //degrees
     substring(str, latitude, 2, 6);
     UART0_write('\n');
-    printStr(str);
+    //printStr(str);
     lat_deg = atof(str);
 
     substring(str, longitude, 3, 6);
     UART0_write('\n');
-    printStr(str);
+    //printStr(str);
     long_deg = atof(str);
 
     //direction
@@ -250,4 +266,7 @@ float delta(float p_lat,float p_long ,float c_lat,float c_long) {
     D= 6371 * c;    
     */
     return D;
+}
+void printflo(float x) {
+    // tbd 
 }
