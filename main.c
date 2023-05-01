@@ -23,6 +23,12 @@ char* substring(char *destination, const char *source, int beg, int n);
 float delta(float p_lat, float p_long, float c_lat, float c_long);
 float torad(int cor, float deg);
 void printflo(float x);
+void reverse(char* str, int len);
+int intToStr(int x, char str[], int d);
+void ftoa(float n, char* res, int afterpoint);
+
+
+
 
 char latitude[100], longitude[100], command[100];
 char lat_dir, long_dir;
@@ -255,11 +261,8 @@ float torad(int cor, float deg) {
     return ((cor + deg / 60) * (PI / 180));
 }
 float delta(float p_lat,float p_long ,float c_lat,float c_long) {
-    /* lsa h5leeha bta5od lat w long l 2 points *4 variables bs* 
-    bs dh hy7tag en ay point tege yt3melaha torad f main f msh h8yr 2ela lma a3adel main */
     float D;
-    D = 1852 * 3440.1 * acos((sin(p_lat) * sin(c_lat)) + cos(p_lat) * cos(c_lat) * cos(c_long - p_long));
-    
+    D = 1852 * 3440.1 * acos((sin(p_lat) * sin(c_lat)) + cos(p_lat) * cos(c_lat) * cos(c_long - p_long));    
     // different method
     /*float a = pow(sin((c_lat - p_lat) / 2), 2) + pow(sin((c_long - p_long) / 2), 2) * cos(c_lat) * cos(p_lat);
     float c = 2 * asin(sqrt(a));
@@ -268,5 +271,58 @@ float delta(float p_lat,float p_long ,float c_lat,float c_long) {
     return D;
 }
 void printflo(float x) {
-    // tbd 
+    char res[20];
+    ftoa(x, res, 4);
+    printStr(res);
+}
+void reverse(char* str, int len)
+{
+    int i = 0, j = len - 1, temp;
+    while (i < j) {
+        temp = str[i];
+        str[i] = str[j];
+        str[j] = temp;
+        i++;
+        j--;
+    }
+}
+int intToStr(int x, char str[], int d)
+{
+    int i = 0;
+    while (x) {
+        str[i++] = (x % 10) + '0';
+        x = x / 10;
+    }
+
+    // If number of digits required is more, then
+    // add 0s at the beginning
+    while (i < d)
+        str[i++] = '0';
+
+    reverse(str, i);
+    str[i] = '\0';
+    return i;
+}
+void ftoa(float n, char* res, int afterpoint)
+{
+    // Extract integer part
+    int ipart = (int)n;
+
+    // Extract floating part
+    float fpart = n - (float)ipart;
+
+    // convert integer part to string
+    int i = intToStr(ipart, res, 0);
+
+    // check for display option after point
+    if (afterpoint != 0) {
+        res[i] = '.'; // add dot
+
+        // Get the value of fraction part upto given no.
+        // of points after dot. The third parameter
+        // is needed to handle cases like 233.007
+        fpart = fpart * pow(10, afterpoint);
+
+        intToStr((int)fpart, res + i + 1, afterpoint);
+    }
 }
