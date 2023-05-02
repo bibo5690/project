@@ -27,7 +27,7 @@ void reverse(char* str, int len);
 int intToStr(int x, char str[], int d);
 void ftoa(float n, char* res, int afterpoint);
 
-
+void UART2_Init(void);
 
 
 char latitude[100], longitude[100], command[100];
@@ -39,7 +39,7 @@ int flag, len, first;
 int main()
 {
     FPUEnable();
-    UART0_Init();
+    UART2_Init();
     PortF_Init();
     first = 0;
     total_distance = 0;
@@ -116,6 +116,29 @@ void UART0_Init(void)
     GPIO_PORTA_DEN_R |= 0x03;
 }
 
+void UART2_Init(void)
+{
+	char x;
+    SYSCTL_RCGCUART_R |= SYSCTL_RCGCUART_R2;    //enable UART clock
+    
+    SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R3;    //enable GPIO clock
+		//while(!(SYSCTL_PRUART_R&SYSCTL_PRUART_R2 ));
+	  x='a';x='b';x='c';x='d';  
+	
+    UART2_CTL_R &= ~UART_CTL_UARTEN;            //disable UART CTL
+    
+    UART2_IBRD_R = 104;     //calculate BRD: (16*10^6)/(16*9600) = 104.16667
+    UART2_FBRD_R = 11;      //0.16667*64 + 0.5
+
+    UART2_LCRH_R = (UART_LCRH_WLEN_8 | UART_LCRH_FEN);  //enable uart parameters such as data length & FIFO
+    UART2_CTL_R |= (UART_CTL_UARTEN | UART_CTL_RXE | UART_CTL_TXE);             //enable UART CTL
+
+    GPIO_PORTD_AFSEL_R |= 0x03;
+    GPIO_PORTD_PCTL_R = (GPIO_PORTD_PCTL_R & ~0xFF) | (GPIO_PCTL_PD6_U2RX | GPIO_PCTL_PD7_U2TX);
+    GPIO_PORTD_DEN_R |= 0x03;
+}
+
+
 void PortF_Init(void)
 {
     SYSCTL_RCGCGPIO_R |= 0X20;                      //start clock
@@ -130,13 +153,13 @@ void PortF_Init(void)
 
 uint8_t UART0_available(void)
 {
-    return ((UART0_FR_R & UART_FR_RXFE) == UART_FR_RXFE) ? 0 : 1;
+    return ((UART2_FR_R & UART_FR_RXFE) == UART_FR_RXFE) ? 0 : 1;
 }
 
 char UART0_read(void)
 {
     while (UART0_available() != 1);
-    return UART0_DR_R & 0xFF;
+    return UART2_DR_R & 0xFF;
 }
 
 void getCommand(char*str)
@@ -227,8 +250,8 @@ void getCoordinates(void)
 
 void UART0_write(char c)
 {
-    while ((UART0_FR_R & UART_FR_TXFF) != 0);
-    UART0_DR_R = c;
+    while ((UART2_FR_R & UART_FR_TXFF) != 0);
+    UART2_DR_R = c;
 }
 
 void printStr(char *str)
