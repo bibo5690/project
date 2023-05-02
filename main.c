@@ -32,7 +32,7 @@ void ftoa(float n, char* res, int afterpoint);
 
 char latitude[100], longitude[100], command[100];
 char lat_dir, long_dir;
-float lat_deg, long_deg, c_lat, c_long, p_lat, p_long, f_lat, f_long, s_lat, s_long, total_distance;
+float lat_deg, long_deg, c_lat, c_long, p_lat, p_long, f_lat, f_long, s_lat, s_long, total_distance, dtg;
 int lat_coordinate, long_coordinate;
 int flag, len, first;
 
@@ -43,10 +43,12 @@ int main()
     PortF_Init();
     first = 0;
     total_distance = 0;
+    f_lat = .8398;                // de lines ele fiha values el final point
+    f_long = .2010;              // de lines ele fiha values el final point
     while(1)
     {
         printStr("Enter command: \n");
-        getCommand(command);
+        getCommand(command);            
         if (first == 0) {
             getCoordinates();
             s_lat = torad(lat_coordinate, lat_deg);
@@ -63,6 +65,21 @@ int main()
             c_long = torad(long_coordinate, long_deg);
             total_distance += delta(p_lat, p_long, c_lat, c_long);
         }
+        dtg = delta(c_lat, c_long, f_lat, f_long);
+        // fe azma mmkn n7tag n8yr awl condition 3shan el accuracy msh 100% f mmkn yb2a 3la el target w yb2a fe far2 .003 y5le el led mtnawarsh s7
+				if (dtg == 0) {
+            GPIO_PORTF_DATA_R = 0x08;
+        }
+        else if (dtg < 5) {
+            GPIO_PORTF_DATA_R = 0x0A;
+        }
+        else if (dtg > 5) {
+            GPIO_PORTF_DATA_R = 0x02;
+        }
+        UART0_write('\n');
+		printStr("distance to target = ");
+        printflo(dtg);
+        UART0_write('\n');
         printStr("D = ");
         printflo(total_distance);
         UART0_write('\n');
@@ -77,7 +94,6 @@ int main()
         UART0_write('\n');
         printStr("c_long = ");
         printflo(c_long);
-        UART0_write('\n');
         UART0_write('\n');
     }
 }
@@ -256,18 +272,16 @@ void FPUEnable(void)
 //floating point
 //uart check
 
+
 float torad(int cor, float deg) {
     float PI = 3.141592653589793;
     return ((cor + deg / 60) * (PI / 180));
 }
 float delta(float p_lat,float p_long ,float c_lat,float c_long) {
-    float D;
-    D = 1852 * 3440.1 * acos((sin(p_lat) * sin(c_lat)) + cos(p_lat) * cos(c_lat) * cos(c_long - p_long));    
-    // different method
-    /*float a = pow(sin((c_lat - p_lat) / 2), 2) + pow(sin((c_long - p_long) / 2), 2) * cos(c_lat) * cos(p_lat);
+    float D;   
+	float a = pow(sin((c_lat - p_lat) / 2), 2) + pow(sin((c_long - p_long) / 2), 2) * cos(c_lat) * cos(p_lat);
     float c = 2 * asin(sqrt(a));
-    D= 6371 * c;    
-    */
+    D = 6371 * c; 
     return D;
 }
 void printflo(float x) {
