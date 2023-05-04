@@ -13,6 +13,7 @@ void FPUEnable(void);
 void UART0_Init(void);
 void PortF_Init(void);
 uint8_t UART0_available(void);
+uint8_t UART2_available(void);
 char UART0_read(void);
 void UART0_write(char c);
 void printStr(char *str);
@@ -39,6 +40,7 @@ int flag, len, first;
 int main()
 {
     FPUEnable();
+    UART0_Init();
     UART2_Init();
     PortF_Init();
     first = 0;
@@ -51,11 +53,12 @@ int main()
         getCommand(command);            
         if (first == 0) {
             getCoordinates();
-            s_lat = torad(lat_coordinate, lat_deg);
-            s_long = torad(long_coordinate, long_deg);
-            c_lat = s_lat;
-            c_long = s_long;
-            first = 1;
+            s_lat = torad(lat_coordinate, lat_deg);   //starting latitude
+            s_long = torad(long_coordinate, long_deg);//starting longtiude
+            c_lat = s_lat;                            //current latitude
+            c_long = s_long;                          //current longtitude
+            //Moved the first flag into the parse funtion to always trigger after finding the right format the first time
+            //first = 1;       //ISSUE: Will trigger even when the format is not right
         }
         else {
             p_lat = c_lat;
@@ -118,12 +121,11 @@ void UART0_Init(void)
 
 void UART2_Init(void)
 {
-	char x;
+	//char x;
     SYSCTL_RCGCUART_R |= SYSCTL_RCGCUART_R2;    //enable UART clock
-    
     SYSCTL_RCGCGPIO_R |= SYSCTL_RCGCGPIO_R3;    //enable GPIO clock
-		//while(!(SYSCTL_PRUART_R&SYSCTL_PRUART_R2 ));
-	  x='a';x='b';x='c';x='d';  
+	//while(!(SYSCTL_PRUART_R&SYSCTL_PRUART_R2 ));
+	//  x='a';x='b';x='c';x='d';  
 	
     UART2_CTL_R &= ~UART_CTL_UARTEN;            //disable UART CTL
     
@@ -153,12 +155,17 @@ void PortF_Init(void)
 
 uint8_t UART0_available(void)
 {
+    return ((UART0_FR_R & UART_FR_RXFE) == UART_FR_RXFE) ? 0 : 1;
+}
+
+uint8_t UART2_available(void)
+{
     return ((UART2_FR_R & UART_FR_RXFE) == UART_FR_RXFE) ? 0 : 1;
 }
 
-char UART0_read(void)
+char UART2_read(void)
 {
-    while (UART0_available() != 1);
+    while (UART2_available() != 1);
     return UART2_DR_R & 0xFF;
 }
 
@@ -168,7 +175,8 @@ void getCommand(char*str)
     int i;
     for (i = 0; i < 100; i++)
     {
-        c = UART0_read();
+        //c = UART0_read();
+        c = UART2_read();      //Reading data from GPS Module
         if(c == '\n' || c == '\r')
         {
             len = i;
@@ -194,7 +202,7 @@ void parse(void)
         flag = 1;
         return;
     }
-
+    first = 1; //Moved the first flag into the parse funtion to always trigger after finding the right format the first time
     j = 0;
     //printStr("\nlatitude: ");
     for (i = 16; i <= 25; i++)
@@ -250,8 +258,8 @@ void getCoordinates(void)
 
 void UART0_write(char c)
 {
-    while ((UART2_FR_R & UART_FR_TXFF) != 0);
-    UART2_DR_R = c;
+    while ((UART0_FR_R & UART_FR_TXFF) != 0);
+    UART0_DR_R = c;
 }
 
 void printStr(char *str)
