@@ -36,6 +36,7 @@ char lat_dir, long_dir;
 float lat_deg, long_deg, c_lat, c_long, p_lat, p_long, f_lat, f_long, s_lat, s_long, total_distance, dtg;
 int lat_coordinate, long_coordinate;
 int flag, len, first;
+//flag = 0 --> Format is right,   flag = 1 --> format is wrong
 
 int main()
 {
@@ -43,6 +44,7 @@ int main()
     UART0_Init();
     UART2_Init();
     PortF_Init();
+	  //GPIO_PORTF_DATA_R = 0x08;
     first = 0;
     total_distance = 0;
     f_lat = .8398;                // de lines ele fiha values el final point
@@ -68,9 +70,16 @@ int main()
             c_long = torad(long_coordinate, long_deg);
             total_distance += delta(p_lat, p_long, c_lat, c_long);
         }
-        dtg = delta(c_lat, c_long, f_lat, f_long);
+
+
+        //Condition to check the format is right dirst before getting dtg
+        if (flag != 1) //The format is not wrong
+        {
+            dtg = delta(c_lat, c_long, f_lat, f_long);
+        }
+            
         // fe azma mmkn n7tag n8yr awl condition 3shan el accuracy msh 100% f mmkn yb2a 3la el target w yb2a fe far2 .003 y5le el led mtnawarsh s7
-				if (dtg == 0) {
+		if (dtg == 0) {
             GPIO_PORTF_DATA_R = 0x08;
         }
         else if (dtg < 5) {
@@ -165,7 +174,7 @@ uint8_t UART2_available(void)
 
 char UART2_read(void)
 {
-    while (UART2_available() != 1);
+    while ((UART2_FR_R & UART_FR_RXFE) == UART_FR_RXFE);
     return UART2_DR_R & 0xFF;
 }
 
@@ -184,7 +193,7 @@ void getCommand(char*str)
         }
         else
             str[i] = c; 
-        UART0_write(c);
+        UART0_write(c);  //Echoing the GPS output
     }
 }
 
