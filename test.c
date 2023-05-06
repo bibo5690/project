@@ -51,62 +51,7 @@ int main()
     f_long = .2010;              // de lines ele fiha values el final point
     while(1)
     {
-        printStr("Enter command: \n");
         getCommand(command);            
-        if (first == 0) {
-            getCoordinates();
-            s_lat = torad(lat_coordinate, lat_deg);   //starting latitude
-            s_long = torad(long_coordinate, long_deg);//starting longtiude
-            c_lat = s_lat;                            //current latitude
-            c_long = s_long;                          //current longtitude
-            //Moved the first flag into the parse funtion to always trigger after finding the right format the first time
-            //first = 1;       //ISSUE: Will trigger even when the format is not right
-        }
-        else {
-            p_lat = c_lat;
-            p_long = c_long;
-            getCoordinates();
-            c_lat = torad(lat_coordinate, lat_deg);
-            c_long = torad(long_coordinate, long_deg);
-            total_distance += delta(p_lat, p_long, c_lat, c_long);
-        }
-
-
-        //Condition to check the format is right dirst before getting dtg
-        if (flag != 1) //The format is not wrong
-        {
-            dtg = delta(c_lat, c_long, f_lat, f_long);
-        }
-            
-        // fe azma mmkn n7tag n8yr awl condition 3shan el accuracy msh 100% f mmkn yb2a 3la el target w yb2a fe far2 .003 y5le el led mtnawarsh s7
-		if (dtg == 0) {
-            GPIO_PORTF_DATA_R = 0x08;
-        }
-        else if (dtg < 5) {
-            GPIO_PORTF_DATA_R = 0x0A;
-        }
-        else if (dtg > 5) {
-            GPIO_PORTF_DATA_R = 0x02;
-        }
-        UART0_write('\n');
-		printStr("distance to target = ");
-        printflo(dtg);
-        UART0_write('\n');
-        printStr("D = ");
-        printflo(total_distance);
-        UART0_write('\n');
-        printStr("p_lat = ");
-        printflo(p_lat);
-        UART0_write('\n');
-        printStr("p_long = ");
-        printflo(p_long);
-        UART0_write('\n');
-        printStr("c_lat = ");
-        printflo(c_lat);
-        UART0_write('\n');
-        printStr("c_long = ");
-        printflo(c_long);
-        UART0_write('\n');
     }
 }
 
@@ -188,7 +133,7 @@ void getCommand(char*str)
     {
         //c = UART0_read();
         c = UART2_read();      //Reading data from GPS Module
-        if(c == '\n' || c == '\r')
+        if(c == '$')
         {
             len = i;
             break;
@@ -197,6 +142,7 @@ void getCommand(char*str)
             str[i] = c; 
         UART0_write(c);  //Echoing the GPS output
     }
+    UART0_write('\n');
 }
 
 void parse(void)
@@ -206,14 +152,9 @@ void parse(void)
     flag = 0;
 
     //CHECK
-for (i = 0; i < 6; i++)
+    for (i = 0; i < 6; i++)
         check[i] = command[i];
-    if ((strcmp(check, "GPRMC")) != 0)
-    {
-        flag = 1;
-        return;
-    }
-    if (command[13] != 'A')
+    if (((strcmp(check, "$GPRMC")) != 0) || len < 10 || command[14] != 'A')
     {
         flag = 1;
         return;

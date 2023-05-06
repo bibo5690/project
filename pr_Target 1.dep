@@ -7,3 +7,10 @@ I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C819B4)
 I (C:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C819B4)
 I (C:\Keil\ARM\ARMCC\include\math.h)(0x51C819B4)
 I (fpu.h)(0x64496205)
+F (.\test.c)(0x6455963A)(-c --cpu Cortex-M4.fp -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork -I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-DTM4C123GH6PM-o .\test.o --omf_browse .\test.crf --depend .\test.d)
+I (tm4c123gh6pm.h)(0x64485610)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C819B4)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C819B4)
+I (C:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C819B4)
+I (C:\Keil\ARM\ARMCC\include\math.h)(0x51C819B4)
+I (fpu.h)(0x64496205)
