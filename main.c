@@ -47,8 +47,8 @@ int main()
 	  //GPIO_PORTF_DATA_R = 0x08;
     first = 0;
     total_distance = 0;
-    f_lat = .8398;                // de lines ele fiha values el final point
-    f_long = .2010;              // de lines ele fiha values el final point
+    f_lat = torad(48 , 7.038);                // de lines ele fiha values el final point
+    f_long = torad(11 , 31);              // de lines ele fiha values el final point
     while(1)
     {
         memset(command,0,strlen(command));   
