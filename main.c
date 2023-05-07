@@ -51,10 +51,16 @@ int main()
     f_long = .2010;              // de lines ele fiha values el final point
     while(1)
     {
-        printStr("Enter command: \n");
-        getCommand(command);            
+        memset(command,0,strlen(command));   
+        //printStr("Enter command: \n");
+        getCommand(command);
+
+        
         if (first == 0) {
             getCoordinates();
+            if(flag ==1){
+                continue;
+            }
             s_lat = torad(lat_coordinate, lat_deg);   //starting latitude
             s_long = torad(long_coordinate, long_deg);//starting longtiude
             c_lat = s_lat;                            //current latitude
@@ -66,6 +72,9 @@ int main()
             p_lat = c_lat;
             p_long = c_long;
             getCoordinates();
+            if(flag ==1){
+                continue;
+            }
             c_lat = torad(lat_coordinate, lat_deg);
             c_long = torad(long_coordinate, long_deg);
             total_distance += delta(p_lat, p_long, c_lat, c_long);
@@ -188,7 +197,7 @@ void getCommand(char*str)
     {
         //c = UART0_read();
         c = UART2_read();      //Reading data from GPS Module
-        if(c == '\n' || c == '\r')
+        if(c == '$')
         {
             len = i;
             break;
@@ -206,30 +215,35 @@ void parse(void)
     flag = 0;
 
     //CHECK
-for (i = 0; i < 6; i++)
+for (i = 0; i < 5; i++){
         check[i] = command[i];
+}
+    check[5] = '\0';
     if ((strcmp(check, "GPRMC")) != 0)
     {
         flag = 1;
+        printStr("Error1");
         return;
     }
-    if (command[13] != 'A')
-    {
+    if (command[16] != 'A')
+		{
+        printStr("Error5");
         flag = 1;
+
         return;
     }
     first = 1; //Moved the first flag into the parse funtion to always trigger after finding the right format the first time
     j = 0;
     //printStr("\nlatitude: ");
-    for (i = 16; i <= 25; i++)
+    for (i = 18; i < 30; i++)
     {
-        UART0_write(command[i]);
-        latitude[j] = command[i];
+        UART0_write(command[i]);//
+        latitude[j] = command[i]; //un seperated lat
         j += 1;
     }
     //printStr("\nlongitude: ");
     j = 0;
-    for (i = 27; i <= 37; i++)
+    for (i = 31; i < 44; i++)
     {
         UART0_write(command[i]);
         longitude[j] = command[i];
@@ -242,10 +256,11 @@ void getCoordinates(void)
     char str[15];
     int l1, l2;
 
+    parse();
+
     l1 = strlen(latitude);
     l2 = strlen(longitude);
 
-    parse();
     if (flag == 1)
         return;
 
@@ -257,12 +272,12 @@ void getCoordinates(void)
 
     //degrees
     substring(str, latitude, 2, 6);
-    UART0_write('\n');
+    //UART0_write('\n');
     //printStr(str);
     lat_deg = atof(str);
 
     substring(str, longitude, 3, 6);
-    UART0_write('\n');
+    //UART0_write('\n');
     //printStr(str);
     long_deg = atof(str);
 
