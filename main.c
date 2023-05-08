@@ -47,8 +47,8 @@ int main()
 	  //GPIO_PORTF_DATA_R = 0x08;
     first = 0;
     total_distance = 0;
-    f_lat = torad(48 , 7.038);                // de lines ele fiha values el final point
-    f_long = torad(11 , 31);              // de lines ele fiha values el final point
+    f_lat = torad(30,0.0640570*60);                // de lines ele fiha values el final point
+    f_long = torad(31, 0.2799856*60);              // de lines ele fiha values el final point
     while(1)
     {
         memset(command,0,strlen(command));   
@@ -85,10 +85,12 @@ int main()
         if (flag != 1) //The format is not wrong
         {
             dtg = delta(c_lat, c_long, f_lat, f_long);
+          UART0_write('\n');
+            printflo( dtg);
         }
             
         // fe azma mmkn n7tag n8yr awl condition 3shan el accuracy msh 100% f mmkn yb2a 3la el target w yb2a fe far2 .003 y5le el led mtnawarsh s7
-		if (dtg == 0) {
+		if (dtg < 2) {
             GPIO_PORTF_DATA_R = 0x08;
         }
         else if (dtg < 5) {
@@ -97,8 +99,8 @@ int main()
         else if (dtg > 5) {
             GPIO_PORTF_DATA_R = 0x02;
         }
-        UART0_write('\n');
-		printStr("distance to target = ");
+        /*UART0_write('\n');
+				printStr("distance to target = ");
         printflo(dtg);
         UART0_write('\n');
         printStr("D = ");
@@ -115,6 +117,10 @@ int main()
         UART0_write('\n');
         printStr("c_long = ");
         printflo(c_long);
+        UART0_write('\n'); */
+				UART0_write('\n');
+        printStr("D = ");
+        printflo(total_distance);
         UART0_write('\n');
     }
 }
@@ -184,8 +190,7 @@ uint8_t UART2_available(void)
 }
 
 char UART2_read(void)
-{
-    while ((UART2_FR_R & UART_FR_RXFE) != 0);
+{    while ((UART2_FR_R & UART_FR_RXFE) != 0);
     return UART2_DR_R & 0xFF;
 }
 
@@ -232,6 +237,13 @@ for (i = 0; i < 5; i++){
 
         return;
     }
+    if (command[17] != ',')
+		{
+        printStr("Error6");
+        flag = 1;
+
+        return;
+    }
     first = 1; //Moved the first flag into the parse funtion to always trigger after finding the right format the first time
     j = 0;
     //printStr("\nlatitude: ");
@@ -267,19 +279,33 @@ void getCoordinates(void)
     //coordinates
     substring(str, latitude, 0, 2);
     lat_coordinate = atoi(str);
+    UART0_write('\n');
+    printflo(lat_coordinate);
+    UART0_write('\n');
     substring(str, longitude, 0, 3);
     long_coordinate = atoi(str);
+    UART0_write('\n');
+    printflo(long_coordinate);
+    UART0_write('\n');
 
     //degrees
-    substring(str, latitude, 2, 6);
+    substring(str, latitude, 2, 5);
     //UART0_write('\n');
     //printStr(str);
     lat_deg = atof(str);
 
-    substring(str, longitude, 3, 6);
+    UART0_write('\n');
+    printflo(lat_deg);
+    UART0_write('\n');
+
+    substring(str, longitude, 3, 5);
     //UART0_write('\n');
     //printStr(str);
     long_deg = atof(str);
+
+    UART0_write('\n');
+    printflo(long_deg);
+    UART0_write('\n');
 
     //direction
     lat_dir = latitude[l1-1];
@@ -343,7 +369,7 @@ float delta(float p_lat,float p_long ,float c_lat,float c_long) {
     float D;   
 	float a = pow(sin((c_lat - p_lat) / 2), 2) + pow(sin((c_long - p_long) / 2), 2) * cos(c_lat) * cos(p_lat);
     float c = 2 * asin(sqrt(a));
-    D = 6371 * c; 
+    D = 6371 * c * 1000; 
     return D;
 }
 void printflo(float x) {
