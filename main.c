@@ -386,8 +386,13 @@ float torad(int cor, float deg) {
 }
 //Check distance func or use a better function
 float delta(float p_lat,float p_long ,float c_lat,float c_long) {
-    float D;   
-	float a = pow(sin((c_lat - p_lat) / 2), 2) + pow(sin((c_long - p_long) / 2), 2) * cos(c_lat) * cos(p_lat);
+    double D;   
+    /*
+    new function
+    float t = pow(sin((c_lat - p_lat) / 2), 2) + cos(c_lat) * cos(p_lat) * pow(sin((c_long - p_long) / 2), 2);
+    double c = 2 * atan(sqrt(a), sqrt(1 - a));
+    */
+    float a = pow(sin((c_lat - p_lat) / 2), 2) + pow(sin((c_long - p_long) / 2), 2) * cos(c_lat) * cos(p_lat);
     float c = 2 * asin(sqrt(a));
     D = 6371 * c * 1000; 
     return D;
