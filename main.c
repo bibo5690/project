@@ -27,17 +27,18 @@ void printflo(float x);
 void reverse(char* str, int len);
 int intToStr(int x, char str[], int d);
 void ftoa(float n, char* res, int afterpoint);
-
+float input_latlong(float latlong);
 void UART2_Init(void);
 
 
 char latitude[100], longitude[100], command[100];
 char lat_dir, long_dir;
-float lat_deg, long_deg, c_lat, c_long, p_lat, p_long, f_lat, f_long, s_lat, s_long, total_distance, dtg;
+float lat_deg, long_deg, c_lat, c_long, p_lat, p_long, f_lat, f_long, s_lat, s_long, total_distance, dtg, delta_view;
 int lat_coordinate, long_coordinate;
 int flag, len, first;
 //flag = 0 --> Format is right,   flag = 1 --> format is wrong
 
+float vvv = 0.8;
 int main()
 {
     FPUEnable();
@@ -47,8 +48,17 @@ int main()
 	  //GPIO_PORTF_DATA_R = 0x08;
     first = 0;
     total_distance = 0;
-    f_lat = torad(30,0.0640570*60);                // de lines ele fiha values el final point
-    f_long = torad(31, 0.2799856*60);              // de lines ele fiha values el final point
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////
+    //Check the number of floting point percision
+    //f_lat = torad(30,0.0640570*60);                // de lines ele fiha values el final point
+    //f_long = torad(31, 0.2799856*60);              // de lines ele fiha values el final point
+    f_lat = input_latlong(30.0634599);
+    f_long = input_latlong(31.2794897);
+    ///////////////////////////////////////////////////////////////////////////////////////////
+
+		
     while(1)
     {
         memset(command,0,strlen(command));   
@@ -77,7 +87,16 @@ int main()
             }
             c_lat = torad(lat_coordinate, lat_deg);
             c_long = torad(long_coordinate, long_deg);
-            total_distance += delta(p_lat, p_long, c_lat, c_long);
+             delta_view = delta(p_lat, p_long, c_lat, c_long);
+             if (!(delta_view<vvv))
+             {
+
+                total_distance += delta(p_lat, p_long, c_lat, c_long);
+             }
+             
+          
+            printflo(delta_view);
+        
         }
 
 
@@ -289,7 +308,7 @@ void getCoordinates(void)
     UART0_write('\n');
 
     //degrees
-    substring(str, latitude, 2, 5);
+    substring(str, latitude, 2, 8);
     //UART0_write('\n');
     //printStr(str);
     lat_deg = atof(str);
@@ -298,7 +317,7 @@ void getCoordinates(void)
     printflo(lat_deg);
     UART0_write('\n');
 
-    substring(str, longitude, 3, 5);
+    substring(str, longitude, 3, 8);
     //UART0_write('\n');
     //printStr(str);
     long_deg = atof(str);
@@ -365,6 +384,7 @@ float torad(int cor, float deg) {
     float PI = 3.141592653589793;
     return ((cor + deg / 60) * (PI / 180));
 }
+//Check distance func or use a better function
 float delta(float p_lat,float p_long ,float c_lat,float c_long) {
     float D;   
 	float a = pow(sin((c_lat - p_lat) / 2), 2) + pow(sin((c_long - p_long) / 2), 2) * cos(c_lat) * cos(p_lat);
@@ -374,7 +394,7 @@ float delta(float p_lat,float p_long ,float c_lat,float c_long) {
 }
 void printflo(float x) {
     char res[20];
-    ftoa(x, res, 4);
+    ftoa(x, res, 5); //To change to check sensitivity, 4 is the number of floating points
     printStr(res);
 }
 void reverse(char* str, int len)
@@ -405,7 +425,7 @@ int intToStr(int x, char str[], int d)
     str[i] = '\0';
     return i;
 }
-void ftoa(float n, char* res, int afterpoint)
+void ftoa(float n, char* res, int afterpoint) //Check number of floating digits
 {
     // Extract integer part
     int ipart = (int)n;
@@ -428,3 +448,8 @@ void ftoa(float n, char* res, int afterpoint)
         intToStr((int)fpart, res + i + 1, afterpoint);
     }
 }
+
+float input_latlong(float latlong){
+    return torad((int)latlong, floor(100000*((latlong - (int)latlong) * 60))/100000);
+}
+
