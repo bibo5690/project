@@ -38,7 +38,7 @@ int lat_coordinate, long_coordinate;
 int flag, len, first;
 //flag = 0 --> Format is right,   flag = 1 --> format is wrong
 
-float vvv = 0.8;
+float DELTA_ERROR = 0.75;
 int main()
 {
     FPUEnable();
@@ -54,8 +54,8 @@ int main()
     //Check the number of floting point percision
     //f_lat = torad(30,0.0640570*60);                // de lines ele fiha values el final point
     //f_long = torad(31, 0.2799856*60);              // de lines ele fiha values el final point
-    f_lat = input_latlong(30.0634599);
-    f_long = input_latlong(31.2794897);
+    f_lat = input_latlong(30.0633026);
+    f_long = input_latlong(31.2791916);
     ///////////////////////////////////////////////////////////////////////////////////////////
 
 		
@@ -88,7 +88,7 @@ int main()
             c_lat = torad(lat_coordinate, lat_deg);
             c_long = torad(long_coordinate, long_deg);
              delta_view = delta(p_lat, p_long, c_lat, c_long);
-             if (!(delta_view<vvv))
+             if (!(delta_view<DELTA_ERROR))
              {
 
                 total_distance += delta(p_lat, p_long, c_lat, c_long);
