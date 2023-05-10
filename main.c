@@ -35,7 +35,7 @@ char latitude[100], longitude[100], command[100];
 char lat_dir, long_dir;
 float lat_deg, long_deg, c_lat, c_long, p_lat, p_long, f_lat, f_long, s_lat, s_long, total_distance, dtg, delta_view;
 int lat_coordinate, long_coordinate;
-int flag, len, first;
+int flag, len, first, GPS_read; //flags
 //flag = 0 --> Format is right,   flag = 1 --> format is wrong
 
 float DELTA_ERROR = 0.75;
@@ -45,8 +45,9 @@ int main()
     UART0_Init();
     UART2_Init();
     PortF_Init();
-	  //GPIO_PORTF_DATA_R = 0x08;
+    //GPIO_PORTF_DATA_R = 0x08;
     first = 0;
+    GPS_read = 1;
     total_distance = 0;
 
 
@@ -85,18 +86,20 @@ int main()
             if(flag ==1){
                 continue;
             }
+            if (GPS_read == 0) //Get the reading every 2 sec instead of 1
+            {
+                GPS_read = 1;
+                continue;
+            }
             c_lat = torad(lat_coordinate, lat_deg);
             c_long = torad(long_coordinate, long_deg);
-             delta_view = delta(p_lat, p_long, c_lat, c_long);
-             if (!(delta_view<DELTA_ERROR))
-             {
-
+            delta_view = delta(p_lat, p_long, c_lat, c_long);
+            if (!(delta_view<DELTA_ERROR)){
                 total_distance += delta(p_lat, p_long, c_lat, c_long);
-             }
-             
-          
+            }         
             printflo(delta_view);
-        
+            GPS_read = 0;
+            
         }
 
 
