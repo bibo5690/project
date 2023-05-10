@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\pr.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\pr.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Tue May 09 14:56:48 2023
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Wed May 10 18:24:14 2023
 <BR><P>
 <H3>Maximum Stack Usage =        432 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1160,8 +1160,8 @@ Global Symbols
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCoordinates
 </UL>
 
-<P><STRONG><a name="[8a]"></a>delta</STRONG> (Thumb, 410 bytes, Stack size 112 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 408<LI>Call Chain = delta &rArr; __hardfp_sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
+<P><STRONG><a name="[8a]"></a>delta</STRONG> (Thumb, 436 bytes, Stack size 120 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 416<LI>Call Chain = delta &rArr; __hardfp_sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sin
@@ -1187,7 +1187,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCoordinates
 </UL>
 
-<P><STRONG><a name="[90]"></a>parse</STRONG> (Thumb, 264 bytes, Stack size 112 bytes, main.o(.text))
+<P><STRONG><a name="[90]"></a>parse</STRONG> (Thumb, 262 bytes, Stack size 112 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = parse &rArr; strcmp
 </UL>
 <BR>[Calls]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strcmp
@@ -1253,7 +1253,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[77]"></a>main</STRONG> (Thumb, 664 bytes, Stack size 0 bytes, main.o(.text))
+<P><STRONG><a name="[77]"></a>main</STRONG> (Thumb, 696 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 432<LI>Call Chain = main &rArr; getCoordinates &rArr; printflo &rArr; ftoa &rArr; __hardfp_pow &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
