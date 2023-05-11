@@ -242,8 +242,8 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>35</TopLine>
-      <CurrentLine>43</CurrentLine>
+      <TopLine>116</TopLine>
+      <CurrentLine>124</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>..\test.c</PathWithFileName>
       <FilenameWithoutPath>test.c</FilenameWithoutPath>

@@ -3,11 +3,11 @@
 <title>Static Call Graph - [.\pr.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\pr.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Tue May 09 14:56:48 2023
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Thu May 11 10:20:03 2023
 <BR><P>
-<H3>Maximum Stack Usage =        432 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =        416 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
-main &rArr; getCoordinates &rArr; printflo &rArr; ftoa &rArr; __hardfp_pow &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
+main &rArr; delta &rArr; __hardfp_sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 <P>
 <H3>
 Mutually Recursive functions
@@ -1107,19 +1107,15 @@ Global Symbols
 </UL>
 <P><STRONG><a name="[80]"></a>UART0_write</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, main.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCommand
-<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCoordinates
-<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse
 <LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printStr
 </UL>
 
-<P><STRONG><a name="[7f]"></a>printStr</STRONG> (Thumb, 26 bytes, Stack size 4 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = printStr
+<P><STRONG><a name="[7f]"></a>printStr</STRONG> (Thumb, 30 bytes, Stack size 8 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = printStr
 </UL>
 <BR>[Calls]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_write
 </UL>
 <BR>[Called By]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printflo
 </UL>
 
@@ -1157,11 +1153,10 @@ Global Symbols
 <LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printStr
 </UL>
 <BR>[Called By]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
-<LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCoordinates
 </UL>
 
-<P><STRONG><a name="[8a]"></a>delta</STRONG> (Thumb, 410 bytes, Stack size 112 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 408<LI>Call Chain = delta &rArr; __hardfp_sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
+<P><STRONG><a name="[8a]"></a>delta</STRONG> (Thumb, 436 bytes, Stack size 120 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 416<LI>Call Chain = delta &rArr; __hardfp_sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sqrt
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sin
@@ -1181,33 +1176,29 @@ Global Symbols
 <LI><a href="#[99]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;input_latlong
 </UL>
 
-<P><STRONG><a name="[94]"></a>substring</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, main.o(.text))
+<P><STRONG><a name="[95]"></a>substring</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = substring
 </UL>
 <BR>[Called By]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCoordinates
 </UL>
 
-<P><STRONG><a name="[90]"></a>parse</STRONG> (Thumb, 264 bytes, Stack size 112 bytes, main.o(.text))
+<P><STRONG><a name="[90]"></a>parse</STRONG> (Thumb, 206 bytes, Stack size 112 bytes, main.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = parse &rArr; strcmp
 </UL>
 <BR>[Calls]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strcmp
-<LI><a href="#[7f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printStr
-<LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_write
 </UL>
 <BR>[Called By]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCoordinates
 </UL>
 
-<P><STRONG><a name="[92]"></a>getCoordinates</STRONG> (Thumb, 284 bytes, Stack size 40 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 432<LI>Call Chain = getCoordinates &rArr; printflo &rArr; ftoa &rArr; __hardfp_pow &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
+<P><STRONG><a name="[92]"></a>getCoordinates</STRONG> (Thumb, 240 bytes, Stack size 40 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 264<LI>Call Chain = getCoordinates &rArr; __hardfp_atof &rArr; __strtod_int &rArr; _local_sscanf &rArr; _scanf_real
 </UL>
-<BR>[Calls]<UL><LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;atoi
-<LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
-<LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atof
+<BR>[Calls]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;atoi
+<LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
+<LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atof
 <LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 <LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse
-<LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;substring
-<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printflo
-<LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_write
+<LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;substring
 </UL>
 <BR>[Called By]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1216,11 +1207,10 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCommand
 </UL>
 
-<P><STRONG><a name="[97]"></a>getCommand</STRONG> (Thumb, 42 bytes, Stack size 8 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = getCommand
+<P><STRONG><a name="[97]"></a>getCommand</STRONG> (Thumb, 34 bytes, Stack size 4 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 4<LI>Call Chain = getCommand
 </UL>
 <BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART2_read
-<LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_write
 </UL>
 <BR>[Called By]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -1253,10 +1243,10 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[77]"></a>main</STRONG> (Thumb, 664 bytes, Stack size 0 bytes, main.o(.text))
-<BR><BR>[Stack]<UL><LI>Max Depth = 432<LI>Call Chain = main &rArr; getCoordinates &rArr; printflo &rArr; ftoa &rArr; __hardfp_pow &rArr; __kernel_poly &rArr; __aeabi_dmul &rArr; _double_epilogue &rArr; _double_round
+<P><STRONG><a name="[77]"></a>main</STRONG> (Thumb, 832 bytes, Stack size 0 bytes, main.o(.text))
+<BR><BR>[Stack]<UL><LI>Max Depth = 416<LI>Call Chain = main &rArr; delta &rArr; __hardfp_sin &rArr; __ieee754_rem_pio2 &rArr; __aeabi_dsub &rArr; __aeabi_dadd &rArr; _double_epilogue &rArr; _double_round
 </UL>
-<BR>[Calls]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
+<BR>[Calls]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strlen
 <LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr
 <LI><a href="#[9d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;FPUEnable
 <LI><a href="#[9e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_Init
@@ -1300,7 +1290,7 @@ Global Symbols
 <BR><BR>[Calls]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memset
 </UL>
 
-<P><STRONG><a name="[93]"></a>strlen</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, strlen.o(.text))
+<P><STRONG><a name="[94]"></a>strlen</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, strlen.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 <LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCoordinates
 </UL>
@@ -1311,7 +1301,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[90]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;parse
 </UL>
 
-<P><STRONG><a name="[95]"></a>atoi</STRONG> (Thumb, 26 bytes, Stack size 16 bytes, atoi.o(.text))
+<P><STRONG><a name="[96]"></a>atoi</STRONG> (Thumb, 26 bytes, Stack size 16 bytes, atoi.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = atoi &rArr; strtol &rArr; _strtoul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strtol
@@ -1442,7 +1432,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_local_sscanf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atof
+<BR>[Called By]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atof
 </UL>
 
 <P><STRONG><a name="[a5]"></a>strtol</STRONG> (Thumb, 112 bytes, Stack size 32 bytes, strtol.o(.text))
@@ -1452,7 +1442,7 @@ Global Symbols
 <LI><a href="#[b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_ctype_table
 <LI><a href="#[a4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_errno_addr
 </UL>
-<BR>[Called By]<UL><LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;atoi
+<BR>[Called By]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;atoi
 </UL>
 
 <P><STRONG><a name="[d6]"></a>__I$use$fp</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, iusefp.o(.text), UNUSED)
@@ -1602,7 +1592,7 @@ Global Symbols
 <P><STRONG><a name="[a4]"></a>__aeabi_errno_addr</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, errno.o(i.__aeabi_errno_addr))
 <BR><BR>[Called By]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_strtoul
 <LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;strtol
-<LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;atoi
+<LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;atoi
 </UL>
 
 <P><STRONG><a name="[db]"></a>__rt_errno_addr</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, errno.o(i.__aeabi_errno_addr), UNUSED)
@@ -1625,7 +1615,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;delta
 </UL>
 
-<P><STRONG><a name="[96]"></a>__hardfp_atof</STRONG> (Thumb, 44 bytes, Stack size 24 bytes, atof.o(i.__hardfp_atof))
+<P><STRONG><a name="[93]"></a>__hardfp_atof</STRONG> (Thumb, 44 bytes, Stack size 24 bytes, atof.o(i.__hardfp_atof))
 <BR><BR>[Stack]<UL><LI>Max Depth = 224<LI>Call Chain = __hardfp_atof &rArr; __strtod_int &rArr; _local_sscanf &rArr; _scanf_real
 </UL>
 <BR>[Calls]<UL><LI><a href="#[af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__strtod_int
@@ -1769,7 +1759,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[c2]"></a>__read_errno</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, errno.o(i.__read_errno))
-<BR><BR>[Called By]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atof
+<BR><BR>[Called By]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atof
 </UL>
 
 <P><STRONG><a name="[dc]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
@@ -1784,7 +1774,7 @@ Global Symbols
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sin
 <LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_pow
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cos
-<LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atof
+<LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_atof
 <LI><a href="#[8f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_asin
 </UL>
 

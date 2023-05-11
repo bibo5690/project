@@ -33,15 +33,17 @@ void UART2_Init(void);
 
 char latitude[100], longitude[100], command[100];
 char lat_dir, long_dir;
-float lat_deg, long_deg, c_lat, c_long, p_lat, p_long, f_lat, f_long, s_lat, s_long, total_distance, dtg, delta_view;
+float lat_deg, long_deg, c_lat, c_long, p_lat, p_long, f_lat, f_long, s_lat, s_long, total_distance, dtg, delta_view, lat_float, long_float;
 int lat_coordinate, long_coordinate;
 int flag, len, first;
 //flag = 0 --> Format is right,   flag = 1 --> format is wrong
 
-float DELTA_ERROR = 0.75;
+float DELTA_ERROR = 0.7;
+int GPS_ERROR = 7;
+
 int main()
 {
-    FPUEnable();
+     FPUEnable();
     UART0_Init();
     UART2_Init();
     PortF_Init();
@@ -54,8 +56,8 @@ int main()
     //Check the number of floting point percision
     //f_lat = torad(30,0.0640570*60);                // de lines ele fiha values el final point
     //f_long = torad(31, 0.2799856*60);              // de lines ele fiha values el final point
-    f_lat = input_latlong(30.0633026);
-    f_long = input_latlong(31.2791916);
+    f_lat = input_latlong(30.0643838);
+    f_long = input_latlong(31.2800895);
     ///////////////////////////////////////////////////////////////////////////////////////////
 
 		
@@ -95,7 +97,7 @@ int main()
              }
              
           
-            printflo(delta_view);
+            // printflo(delta_view);
         
         }
 
@@ -103,20 +105,49 @@ int main()
         //Condition to check the format is right dirst before getting dtg
         if (flag != 1) //The format is not wrong
         {
-            dtg = delta(c_lat, c_long, f_lat, f_long);
-          UART0_write('\n');
-            printflo( dtg);
+            dtg = delta(c_lat, c_long, f_lat, f_long) - GPS_ERROR ;
+        //   UART0_write('\n');
+        //     printflo( dtg);
         }
             
         // fe azma mmkn n7tag n8yr awl condition 3shan el accuracy msh 100% f mmkn yb2a 3la el target w yb2a fe far2 .003 y5le el led mtnawarsh s7
-		if (dtg < 2) {
+		if (dtg < 0) {
             GPIO_PORTF_DATA_R = 0x08;
+						printStr("\n\n");
+            printStr("Latitude: ");
+            printflo(lat_float);
+            printStr("\tLongitude: ");
+            printflo(long_float);
+            printStr("\nTotal distance traveled: ");
+            printflo(total_distance);
+            printStr("\nYou've reached your distination :)\n");
+            while(1);
         }
         else if (dtg < 5) {
             GPIO_PORTF_DATA_R = 0x0A;
+            printStr("Latitude: ");
+            printflo(lat_float);
+            printStr("\tLongitude: ");
+            printflo(long_float);
+            printStr("\nTotal distance traveled: ");
+            printflo(total_distance);
+            printStr("\nYou're close, less than 5m left\n");
+            printStr("\n\n");
+
         }
         else if (dtg > 5) {
             GPIO_PORTF_DATA_R = 0x02;
+            printStr("Latitude: ");
+            printflo(lat_float);
+            printStr("\tLongitude: ");
+            printflo(long_float);
+            UART0_write('\n');
+            printStr("Total distance traveled:");
+            printflo(total_distance);
+						printStr("\n\n");
+            UART0_write('\n');
+
+
         }
         /*UART0_write('\n');
 				printStr("distance to target = ");
@@ -137,10 +168,10 @@ int main()
         printStr("c_long = ");
         printflo(c_long);
         UART0_write('\n'); */
-				UART0_write('\n');
-        printStr("D = ");
-        printflo(total_distance);
-        UART0_write('\n');
+		// 		UART0_write('\n');
+        // printStr("D = ");
+        // printflo(total_distance);
+        // UART0_write('\n');
     }
 }
 
@@ -228,7 +259,7 @@ void getCommand(char*str)
         }
         else
             str[i] = c; 
-        UART0_write(c);  //Echoing the GPS output
+        // UART0_write(c);  //Echoing the GPS output
     }
 }
 
@@ -246,19 +277,19 @@ for (i = 0; i < 5; i++){
     if ((strcmp(check, "GPRMC")) != 0)
     {
         flag = 1;
-        printStr("Error1");
+        // printStr("Error1");
         return;
     }
     if (command[16] != 'A')
 		{
-        printStr("Error5");
+        // printStr("Error5");
         flag = 1;
 
         return;
     }
     if (command[17] != ',')
 		{
-        printStr("Error6");
+        // printStr("Error6");
         flag = 1;
 
         return;
@@ -266,17 +297,17 @@ for (i = 0; i < 5; i++){
     first = 1; //Moved the first flag into the parse funtion to always trigger after finding the right format the first time
     j = 0;
     //printStr("\nlatitude: ");
-    for (i = 18; i < 30; i++)
+    for (i = 18; i < 28; i++)
     {
-        UART0_write(command[i]);//
+        //UART0_write(command[i]);//
         latitude[j] = command[i]; //un seperated lat
         j += 1;
     }
     //printStr("\nlongitude: ");
     j = 0;
-    for (i = 31; i < 44; i++)
+    for (i = 31; i < 42; i++)
     {
-        UART0_write(command[i]);
+        //UART0_write(command[i]);
         longitude[j] = command[i];
         j += 1;
     }
@@ -288,7 +319,8 @@ void getCoordinates(void)
     int l1, l2;
 
     parse();
-
+    lat_float = atof(latitude);
+    long_float = atof(longitude);
     l1 = strlen(latitude);
     l2 = strlen(longitude);
 
@@ -298,14 +330,14 @@ void getCoordinates(void)
     //coordinates
     substring(str, latitude, 0, 2);
     lat_coordinate = atoi(str);
-    UART0_write('\n');
-    printflo(lat_coordinate);
-    UART0_write('\n');
+    // UART0_write('\n');
+    // printflo(lat_coordinate);
+    // UART0_write('\n');
     substring(str, longitude, 0, 3);
     long_coordinate = atoi(str);
-    UART0_write('\n');
-    printflo(long_coordinate);
-    UART0_write('\n');
+    // UART0_write('\n');
+    // printflo(long_coordinate);
+    // UART0_write('\n');
 
     //degrees
     substring(str, latitude, 2, 8);
@@ -313,18 +345,18 @@ void getCoordinates(void)
     //printStr(str);
     lat_deg = atof(str);
 
-    UART0_write('\n');
-    printflo(lat_deg);
-    UART0_write('\n');
+    // UART0_write('\n');
+    // printflo(lat_deg);
+    // UART0_write('\n');
 
     substring(str, longitude, 3, 8);
     //UART0_write('\n');
     //printStr(str);
     long_deg = atof(str);
 
-    UART0_write('\n');
-    printflo(long_deg);
-    UART0_write('\n');
+    // UART0_write('\n');
+    // printflo(long_deg);
+    // UART0_write('\n');
 
     //direction
     lat_dir = latitude[l1-1];
@@ -343,7 +375,8 @@ void printStr(char *str)
     uint8_t i = 0;
     while(str[i])
     {
-        UART0_write(str[i]);
+        char c = str[i];
+        UART0_write(c);
         i++;
     }
 }
@@ -387,11 +420,10 @@ float torad(int cor, float deg) {
 //Check distance func or use a better function
 float delta(float p_lat,float p_long ,float c_lat,float c_long) {
     double D;   
-    /*
-    new function
-    float t = pow(sin((c_lat - p_lat) / 2), 2) + cos(c_lat) * cos(p_lat) * pow(sin((c_long - p_long) / 2), 2);
-    double c = 2 * atan(sqrt(a), sqrt(1 - a));
-    */
+    //new function
+    //float a = pow(sin((c_lat - p_lat) / 2), 2) + cos(c_lat) * cos(p_lat) * pow(sin((c_long - p_long) / 2), 2);
+    //double c = 2 * atan2(sqrt(a), sqrt((1 - a)));
+    
     float a = pow(sin((c_lat - p_lat) / 2), 2) + pow(sin((c_long - p_long) / 2), 2) * cos(c_lat) * cos(p_lat);
     float c = 2 * asin(sqrt(a));
     D = 6371 * c * 1000; 
